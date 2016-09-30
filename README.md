@@ -6,8 +6,10 @@ Every command listed below is from the extremely organized presentation from htt
 ## Create three swarm machines swarm-1, swarm-2, swarm-3
 
 for i in 1 2 3; do
-  docker-machine create -d virtualbox swarm-$i
-done
+
+docker-machine create -d virtualbox swarm-$i
+
+done;
 
 # Swarm Visualizer
 ## <TODO>
