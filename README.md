@@ -1,11 +1,15 @@
 # JenkinsDockerSwarm
 
+Every command listed below is from the extremely organized presentation from http://vfarcic.github.io/jenkins-swarm/index.html. I am trying to understand every single command and document the steps with some details. The <TODO> tags are placeholders where I plan to add details.
+
 # Nodes setup
 ## Create three swarm machines swarm-1, swarm-2, swarm-3
 
 for i in 1 2 3; do
-  docker-machine create -d virtualbox swarm-$i
-done
+
+docker-machine create -d virtualbox swarm-$i
+
+done;
 
 # Swarm Visualizer
 ## <TODO>
