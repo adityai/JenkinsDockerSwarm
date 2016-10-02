@@ -16,11 +16,11 @@ done;
 eval $(docker-machine env swarm-1)
 
 ## Create visualizer container to visualize the swarm cluster
-docker run --name visualizer -d \
-  -p 8083:8083 \
-  -e HOST=$(docker-machine ip swarm-1) \
-  -e PORT=8083 \
-  -v /var/run/docker.sock:/var/run/docker.sock \
+docker run --name visualizer -d 
+  -p 8083:8083 
+  -e HOST=$(docker-machine ip swarm-1) 
+  -e PORT=8083 
+  -v /var/run/docker.sock:/var/run/docker.sock 
   manomarks/visualizer
 
 ## Open the swarm-1 http url
@@ -36,8 +36,8 @@ TOKEN=$(docker swarm join-token -q manager)
 for i in 2 3; do
   eval $(docker-machine env swarm-$i)
 
-  docker swarm join --token $TOKEN \
-  --advertise-addr $(docker-machine ip swarm-$i) \
+  docker swarm join --token $TOKEN 
+  --advertise-addr $(docker-machine ip swarm-$i) 
   $(docker-machine ip swarm-1):2377
 done
 
@@ -51,8 +51,8 @@ docker node ls
 eval $(docker-machine env swarm-1)
 
 ## Create registry container
-docker service create --name registry -p 5000:5000 \
-  --mount "type=bind,source=$PWD,target=/var/lib/registry" \
+docker service create --name registry -p 5000:5000 
+  --mount "type=bind,source=$PWD,target=/var/lib/registry" 
   --reserve-memory 100m registry
 
 ## Display current status of registry container
@@ -68,15 +68,15 @@ docker service create --name go-demo-db --network go-demo mongo
 
 docker service ls
 
-docker service create --name go-demo -e DB=go-demo-db \
+docker service create --name go-demo -e DB=go-demo-db 
   --network go-demo --network proxy vfarcic/go-demo
 
 docker service ps go-demo
 
 # Reverse Proxy
 
-docker service create --name proxy \
-  -p 80:80 -p 443:443 -p 8080:8080 --network proxy \
+docker service create --name proxy 
+  -p 80:80 -p 443:443 -p 8080:8080 --network proxy 
   -e MODE=swarm vfarcic/docker-flow-proxy
 
 docker service ps proxy
@@ -93,9 +93,9 @@ eval $(docker-machine env swarm-1)
 mkdir -p docker/jenkins
 
 ### Create Jenkins container
-docker service create --name jenkins --reserve-memory 300m \
-  -p 8082:8080 -p 50000:50000 -e JENKINS_OPTS="--prefix=/jenkins" \
-  --mount "type=bind,source=$PWD/docker/jenkins,target=/var/jenkins_home" \
+docker service create --name jenkins --reserve-memory 300m 
+  -p 8082:8080 -p 50000:50000 -e JENKINS_OPTS="--prefix=/jenkins" 
+  --mount "type=bind,source=$PWD/docker/jenkins,target=/var/jenkins_home" 
   jenkins:alpine
 
 docker service ps jenkins
@@ -119,7 +119,7 @@ open http://$(docker-machine ip swarm-1):8082/jenkins/pluginManager/available
 -Click "Install without restart"
 
 # Jenkins failover
-NODE=$(docker service ps -f desired-state=running jenkins \
+NODE=$(docker service ps -f desired-state=running jenkins 
   | tail +2 | awk '{print $4}')
 
 eval $(docker-machine env $NODE)
@@ -143,11 +143,11 @@ docker swarm init --advertise-addr $(docker-machine ip swarm-test-1)
 
 # Visualizer
 
-docker run --name visualizer -d \
-  -p 8083:8083 \
-  -e HOST=$(docker-machine ip swarm-test-1) \
-  -e PORT=8083 \
-  -v /var/run/docker.sock:/var/run/docker.sock \
+docker run --name visualizer -d 
+  -p 8083:8083 
+  -e HOST=$(docker-machine ip swarm-test-1) 
+  -e PORT=8083 
+  -v /var/run/docker.sock:/var/run/docker.sock 
   manomarks/visualizer
 
 open http://$(docker-machine ip swarm-test-1):8083
@@ -157,11 +157,11 @@ mkdir -p docker/jenkins/workspace
 
 export USER=admin && export PASSWORD=admin
 
-docker service create --name jenkins-agent \
-  -e COMMAND_OPTIONS="-master http://$(docker-machine ip swarm-1):8082/jenkins -username $USER -password $PASSWORD -labels 'docker' -executors 5" \
-  --mount "type=bind,source=/var/run/docker.sock,target=/var/run/docker.sock" \
-  --mount "type=bind,source=/workspace,target=/workspace" \
-  --mount "type=bind,source=$HOME/.docker/machine/machines,target=/machines" \
+docker service create --name jenkins-agent 
+  -e COMMAND_OPTIONS="-master http://$(docker-machine ip swarm-1):8082/jenkins -username $USER -password $PASSWORD -labels 'docker' -executors 5" 
+  --mount "type=bind,source=/var/run/docker.sock,target=/var/run/docker.sock" 
+  --mount "type=bind,source=/workspace,target=/workspace" 
+  --mount "type=bind,source=$HOME/.docker/machine/machines,target=/machines" 
   --mode global vfarcic/jenkins-swarm-agent
 
 docker service ps jenkins-agent
@@ -187,8 +187,8 @@ open http://$(docker-machine ip swarm-1):8082/jenkins/computer/
 
 # Registry
 
-docker service create --name registry -p 5000:5000 \
-  --mount "type=bind,source=$PWD,target=/var/lib/registry" \
+docker service create --name registry -p 5000:5000 
+  --mount "type=bind,source=$PWD,target=/var/lib/registry" 
   --reserve-memory 100m registry
 
 docker service ps registry
