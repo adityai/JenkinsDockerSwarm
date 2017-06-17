@@ -1,5 +1,7 @@
+#Initialize a swarm. The docker engine targeted by this command becomes a manager in the newly created single-node swarm.
 docker swarm init --advertise-addr $(docker-machine ip swarm-1)
 
+#Manage join tokens?
 TOKEN=$(docker swarm join-token -q manager)
 
 for i in 2 3; do
