@@ -1,5 +1,7 @@
+#To connect your Docker Client to the Docker Engine running on the virtual machine, run: docker-machine env swarm-1
 eval $(docker-machine env swarm-1)
 
+#Create a container for the visualizer
 docker run --name visualizer -d \
     -p 8083:8083 \
     -e HOST=$(docker-machine ip swarm-1) \
@@ -7,5 +9,6 @@ docker run --name visualizer -d \
     -v /var/run/docker.sock:/var/run/docker.sock \
     manomarks/visualizer
 
+#Verify in the browser
 open http://$(docker-machine ip swarm-1):8083
 
