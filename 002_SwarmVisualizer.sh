@@ -3,12 +3,12 @@ eval $(docker-machine env swarm-1)
 
 #Create a container for the visualizer
 docker run --name visualizer -d \
-    -p 8083:8083 \
+    -p 8080:8080 \
     -e HOST=$(docker-machine ip swarm-1) \
-    -e PORT=8083 \
+    -e PORT=8080 \
     -v /var/run/docker.sock:/var/run/docker.sock \
-    manomarks/visualizer
+    dockersamples/visualizer
 
 #Verify in the browser
-open http://$(docker-machine ip swarm-1):8083
+open http://$(docker-machine ip swarm-1):8080
 
